@@ -11,7 +11,7 @@ import eu.winwinit.bcc.model.OrderResponse;
 
 public interface OrderService {
 	public Integer creaOrdine(OrderRequest orderRequest);
-	public Ordine modificaOrdine(OrderRequest orderRequest);
+	public Integer modificaOrdine(OrderRequest orderRequest);
 	public void cancellaOrdineTramiteId(OrderRequest orderRequest);
 
 	

@@ -19,7 +19,7 @@ public class ArticleServiceImpl implements ArticleService{
 		Articolo articolo = new Articolo();
 		articolo.setNomeArticolo(articleRequest.getNomeArticolo());
 		articolo.setDescrizione(articleRequest.getDescrizione());
-		articolo.setQuantita(articleRequest.getQuantita());
+		
 			return articleRepo.save(articolo);
 		
 	}
@@ -29,7 +29,7 @@ public class ArticleServiceImpl implements ArticleService{
 		Articolo articolo = new Articolo();
 		articolo.setNomeArticolo(articleRequest.getNomeArticolo());
 		articolo.setDescrizione(articleRequest.getDescrizione());
-		articolo.setQuantita(articleRequest.getQuantita());
+		
 		articolo.setArticoloId(articleRequest.getArticoloId());
 			articleRepo.save(articolo);
 		return articolo;

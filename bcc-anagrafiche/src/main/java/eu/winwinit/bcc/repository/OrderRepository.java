@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import eu.winwinit.bcc.entities.Ordine;
 
 public interface OrderRepository extends JpaRepository<Ordine,Integer> {
-	public Ordine save(Ordine ordine);
+	
 }

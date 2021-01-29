@@ -23,37 +23,37 @@ import eu.winwinit.bcc.service.OrderService;
 @RequestMapping("/api/v1")
 public class OrderController {
 
-		@Autowired
-		OrderService orderService;
+	@Autowired
+	private OrderService orderService;
 
-		@RequestMapping(value="/creaOrdine",method = RequestMethod.POST)
-		public ResponseEntity<?> creaOrdine(@RequestBody OrderRequest orderRequest){
-				orderService.creaOrdine(orderRequest);
-			return ResponseEntity.status(HttpStatus.OK).body("OK");
-		}
-		
-		@RequestMapping(value="/modificaOrdine",method = RequestMethod.PUT)
-		public ResponseEntity<?> modificaOrdine(@RequestBody OrderRequest orderRequest){
-			orderService.modificaOrdine(orderRequest);
-			return ResponseEntity.status(HttpStatus.OK).body("OK");
+	@RequestMapping(value="/creaOrdine",method = RequestMethod.POST)
+	public ResponseEntity<?> creaOrdine(@RequestBody OrderRequest orderRequest){
+		orderService.creaOrdine(orderRequest);
+		return ResponseEntity.status(HttpStatus.OK).body("OK");
+	}
 
-		}
-		
-		@RequestMapping(value="/eliminaOrdineTramiteId",method = RequestMethod.DELETE)
-		public ResponseEntity<?> eliminaOrdine(@RequestBody OrderRequest orderRequest){
-			orderService.cancellaOrdineTramiteId(orderRequest);
-			return ResponseEntity.status(HttpStatus.OK).body("OK");
-		}
-		
+	@RequestMapping(value="/modificaOrdine",method = RequestMethod.PUT)
+	public ResponseEntity<?> modificaOrdine(@RequestBody OrderRequest orderRequest){
+		orderService.modificaOrdine(orderRequest);
+		return ResponseEntity.status(HttpStatus.OK).body("OK");
 
-		@RequestMapping(value="/view",method = RequestMethod.GET)
-		public ResponseEntity<?> view(@RequestBody OrderRequest orderRequest){
+	}
+
+	@RequestMapping(value="/eliminaOrdineTramiteId",method = RequestMethod.DELETE)
+	public ResponseEntity<?> eliminaOrdine(@RequestBody OrderRequest orderRequest){
+		orderService.cancellaOrdineTramiteId(orderRequest);
+		return ResponseEntity.status(HttpStatus.OK).body("OK");
+	}
+
+
+	@RequestMapping(value="/view",method = RequestMethod.GET)
+	public ResponseEntity<?> view(@RequestBody OrderRequest orderRequest){
 		OrderResponse response = orderService.view(orderRequest.getIdOrdine());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 
-		}
-		
-	
-		
-		
+	}
+
+
+
+
 }

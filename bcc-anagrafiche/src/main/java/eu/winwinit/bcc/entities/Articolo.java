@@ -22,19 +22,12 @@ public class Articolo {
 	private Integer articoloId;
 	private String nomeArticolo;
 	private String descrizione;
-	private Integer quantita;
-	private OrdineArticolo ordineArticolo;
+	
+	private List<OrdineArticolo> ordineArticolo;
 
-	
-	public Articolo (Integer id,String nome,String descrizione,Integer quantita) {
-		this.articoloId=id;
-		this.nomeArticolo= nome;
-		this.descrizione = descrizione;
-		this.quantita = quantita;
-	}
-	public Articolo() {
-	}
-	
+
+
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 
@@ -42,7 +35,7 @@ public class Articolo {
 	public Integer getArticoloId() {
 		return articoloId;
 	}
-	
+
 	public void setArticoloId(Integer articoloId) {
 		this.articoloId = articoloId;
 	}
@@ -53,36 +46,26 @@ public class Articolo {
 	public void setNomeArticolo(String nomeArticolo) {
 		this.nomeArticolo = nomeArticolo;
 	}
-	
-	   @OneToMany(mappedBy = "articolo")
-	public void setOrdineArticolo(OrdineArticolo ordineArticolo) {
+
+	@OneToMany(mappedBy = "articolo")
+	public void setOrdineArticolo(List<OrdineArticolo> ordineArticolo) {
 		this.ordineArticolo = ordineArticolo;
 	}
-	   @Column(name="descrizione_articolo",length = 255)
+	@Column(name="descrizione_articolo",length = 255)
 	public String getDescrizione() {
 		return descrizione;
 	}
 	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
 	}
-	
-	@Column(name = "quantità_articoli")
-	public Integer getQuantita() {
-		return quantita;
-	}
-	public void setQuantita(Integer quantita) {
-		this.quantita = quantita;
-	}
-	@Override
-	public String toString() {
-		return "Articolo [articoloId=" + articoloId + ", nomeArticolo=" + nomeArticolo + ", descrizione=" + descrizione
-				+ ", ordineArticolo=" + ordineArticolo + "]";
-	}
-	   
 
 	
 	
-	
-	
+
+
+
+
+
+
 
 }

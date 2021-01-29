@@ -20,8 +20,8 @@ import eu.winwinit.bcc.service.ArticleService;
 @RequestMapping("/api/v1")
 public class ArticleController {
 	@Autowired
-	ArticleService articleService;
-	
+	private ArticleService articleService;
+
 	@RequestMapping(value="/creaArticolo",method = RequestMethod.POST)
 	public ResponseEntity<?> creaArticolo(@RequestBody ArticleRequest articoloRequest){
 		DettaglioArticoli dettagli = new DettaglioArticoli();
@@ -31,19 +31,19 @@ public class ArticleController {
 		dettagli.setQuantita(articoloRequest.getQuantita());
 		return ResponseEntity.status(HttpStatus.OK).body(articolo);
 	}
-	
+
 	@RequestMapping(value="/modificaArticolo",method = RequestMethod.PUT)
 	public ResponseEntity<?> modificaArticolo(@RequestBody ArticleRequest articoloRequest){
 		articleService.updateArticle(articoloRequest);
 		return ResponseEntity.status(HttpStatus.OK).body("articolo modificato");
 	}
-	
+
 	@RequestMapping(value="/eliminaArticolo",method = RequestMethod.DELETE)
 	public ResponseEntity<?> eliminaArticoloTramiteId(@RequestBody ArticleRequest articoloRequest){
 		articleService.cancellaArticoloTramiteId(articoloRequest);
 		return ResponseEntity.status(HttpStatus.OK).body("articolo eliminato");
-		}
-	
+	}
+
 	@RequestMapping(value="visualizzaArticoli",method = RequestMethod.GET)
 	public ResponseEntity<?> visualizzaTuttiGliArticoli(){
 		List<Articolo> articoli = articleService.visualizzaTuttiGliArticoli();

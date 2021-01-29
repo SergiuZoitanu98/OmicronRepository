@@ -38,9 +38,10 @@ public class OrderServiceImpl implements OrderService {
 		ordine = orderRepo.save(ordine);
 			for(DettaglioArticoli dettaglio :  orderRequest.getDettagliArticolo()) {
 			OrdineArticolo ordineArticolo = new OrdineArticolo();
-			ordineArticolo.setId_articolo_fk(dettaglio.getIdArticolo());
-			ordineArticolo.setId_ordine_fk(ordine.getIdOrdine());
+			ordineArticolo.setId(dettaglio.getIdArticolo());
+			ordineArticolo.setId(ordine.getIdOrdine());
 			ordineArticolo.setOrdine(ordine);
+			ordineArticolo.setQuantita(dettaglio.getQuantita());
 			ordineArticolo.setArticolo(articleRepo.getOne(dettaglio.getIdArticolo()));
 			articleOrderRepo.save(ordineArticolo);
 	}	
@@ -49,14 +50,21 @@ public class OrderServiceImpl implements OrderService {
 	
 
 	@Override
-	public Ordine modificaOrdine(OrderRequest orderRequest) {
-		Ordine ordine = new Ordine();
+	public Integer modificaOrdine(OrderRequest orderRequest) {
+		Ordine ordine = new Ordine ();
 		ordine.setNumeroOrdine(orderRequest.getNumeroOrdine());
 		ordine.setIdOrdine(orderRequest.getIdOrdine());
-		orderRepo.save(ordine);
-		
-		
-		return ordine;
+		ordine = orderRepo.save(ordine);
+			for(DettaglioArticoli dettaglio : orderRequest.getDettagliArticolo()) {
+				OrdineArticolo ordineArticolo = new OrdineArticolo();
+				ordineArticolo.setId(dettaglio.getIdArticolo());
+				ordineArticolo.setId(ordine.getIdOrdine());
+				ordineArticolo.setQuantita(dettaglio.getQuantita());
+				ordineArticolo.setOrdine(ordine);
+		        ordineArticolo.setArticolo(articleRepo.getOne(dettaglio.getIdArticolo()) );
+				articleOrderRepo.save(ordineArticolo);
+			}
+		return ordine.getIdOrdine()	;
 	}
 
 	
@@ -83,8 +91,8 @@ public class OrderServiceImpl implements OrderService {
 		List<DettaglioArticoli> list = new ArrayList<>();
 		DettaglioArticoli dettagli;
 		for(OrdineArticolo o : articoli) {
-			articolo = o.getArticolo();
-			 dettagli = new DettaglioArticoli(articolo.getArticoloId(),articolo.getQuantita());
+			
+			 dettagli = new DettaglioArticoli(o.getArticolo().getArticoloId(),o.getQuantita());
 			 list.add(dettagli);
 		}
 		response.setIdOrdine(ordine.getIdOrdine());
