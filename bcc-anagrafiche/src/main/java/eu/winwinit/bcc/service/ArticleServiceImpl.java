@@ -13,15 +13,13 @@ import eu.winwinit.bcc.repository.ArticleRepository;
 public class ArticleServiceImpl implements ArticleService{
 	@Autowired
 	ArticleRepository articleRepo;
-	
+
 	@Override
 	public Articolo creaArticolo(ArticleRequest articleRequest) {
 		Articolo articolo = new Articolo();
 		articolo.setNomeArticolo(articleRequest.getNomeArticolo());
 		articolo.setDescrizione(articleRequest.getDescrizione());
-		
-			return articleRepo.save(articolo);
-		
+		return articleRepo.save(articolo);
 	}
 
 	@Override
@@ -29,22 +27,18 @@ public class ArticleServiceImpl implements ArticleService{
 		Articolo articolo = new Articolo();
 		articolo.setNomeArticolo(articleRequest.getNomeArticolo());
 		articolo.setDescrizione(articleRequest.getDescrizione());
-		
 		articolo.setArticoloId(articleRequest.getArticoloId());
-			articleRepo.save(articolo);
+		articleRepo.save(articolo);
 		return articolo;
 	}
 
 	@Override
-	public Integer cancellaArticoloTramiteId(ArticleRequest articleRequest) {
+	public void cancellaArticoloTramiteId(ArticleRequest articleRequest) {
 		articleRepo.deleteById(articleRequest.getArticoloId());
-		return 1;
 	}
 
 	@Override
 	public List<Articolo> visualizzaTuttiGliArticoli() {
 		return articleRepo.findAll();
-		
 	}
-
 }

@@ -14,15 +14,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ordini")
 public class Ordine {
+	
 	private Integer idOrdine;
 	private String numeroOrdine;
 
-
 	private List<OrdineArticolo> ordineArticolo;
-
-
-
-
 
 	@OneToMany(mappedBy = "ordine")
 	public void setOrdineArticolo(List<OrdineArticolo> ordineArticolo) {
@@ -39,7 +35,6 @@ public class Ordine {
 		this.idOrdine = id;
 	}
 
-
 	@Column(name = "numero_ordine",nullable = false, length = 255)
 	public String getNumeroOrdine() {
 		return numeroOrdine;
@@ -47,8 +42,9 @@ public class Ordine {
 	public void setNumeroOrdine(String numeroOrdine) {
 		this.numeroOrdine = numeroOrdine;
 	}
-
-
-
-
+	
+	public List<OrdineArticolo> getOrdineArticolo() {
+		return ordineArticolo;
+	}
+	
 }

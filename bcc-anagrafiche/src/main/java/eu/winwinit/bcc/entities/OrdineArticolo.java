@@ -13,10 +13,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ordini_articoli")
 public class OrdineArticolo {
-	
+
 	private Integer idOrdineArticolo;
 	private Integer quantita;
-	
+	private String descrizione;
+
 	private Articolo articolo;
 	private Ordine ordine;
 
@@ -27,13 +28,10 @@ public class OrdineArticolo {
 	public Integer getId() {
 		return idOrdineArticolo;
 	}
-	
+
 	public void setId(Integer id) {
 		this.idOrdineArticolo = id;
 	}
-
-
-	
 
 	@ManyToOne
 	@JoinColumn(name = "id_articolo")
@@ -41,19 +39,15 @@ public class OrdineArticolo {
 		return articolo;
 	}
 
-
-
 	public void setArticolo(Articolo articolo) {
 		this.articolo = articolo;
 	}
-
 
 	@ManyToOne
 	@JoinColumn(name = "id_ordine")
 	public Ordine getOrdine() {
 		return ordine;
 	}
-
 
 
 	public void setOrdine(Ordine ordine) {
@@ -68,7 +62,12 @@ public class OrdineArticolo {
 		this.quantita = quantita;
 	}
 
+	@Column(name = "descrizione_articolo",length = 255)
+	public String getDescrizione() {
+		return descrizione;
+	}
 
-
-
+	public void setDescrizione(String descrizione) {
+		this.descrizione = descrizione;
+	}
 }

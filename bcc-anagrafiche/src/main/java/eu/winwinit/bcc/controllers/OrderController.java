@@ -1,7 +1,4 @@
 package eu.winwinit.bcc.controllers;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.common.base.Optional;
-
-import eu.winwinit.bcc.entities.Ordine;
-import eu.winwinit.bcc.entities.OrdineArticolo;
-import eu.winwinit.bcc.model.DettaglioArticoli;
 import eu.winwinit.bcc.model.OrderRequest;
 import eu.winwinit.bcc.model.OrderResponse;
 import eu.winwinit.bcc.service.OrderService;
@@ -36,7 +27,6 @@ public class OrderController {
 	public ResponseEntity<?> modificaOrdine(@RequestBody OrderRequest orderRequest){
 		orderService.modificaOrdine(orderRequest);
 		return ResponseEntity.status(HttpStatus.OK).body("OK");
-
 	}
 
 	@RequestMapping(value="/eliminaOrdineTramiteId",method = RequestMethod.DELETE)
@@ -45,15 +35,10 @@ public class OrderController {
 		return ResponseEntity.status(HttpStatus.OK).body("OK");
 	}
 
-
 	@RequestMapping(value="/view",method = RequestMethod.GET)
 	public ResponseEntity<?> view(@RequestBody OrderRequest orderRequest){
 		OrderResponse response = orderService.view(orderRequest.getIdOrdine());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 
 	}
-
-
-
-
 }

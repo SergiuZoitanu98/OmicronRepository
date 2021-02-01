@@ -19,6 +19,7 @@ import eu.winwinit.bcc.service.ArticleService;
 @RestController
 @RequestMapping("/api/v1")
 public class ArticleController {
+	
 	@Autowired
 	private ArticleService articleService;
 

@@ -1,5 +1,4 @@
 package eu.winwinit.bcc.repository;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import eu.winwinit.bcc.entities.Ordine;

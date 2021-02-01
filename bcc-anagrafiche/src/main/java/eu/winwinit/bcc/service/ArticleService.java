@@ -9,6 +9,7 @@ public interface ArticleService {
 
 	public Articolo creaArticolo(ArticleRequest articleRequest);
 	public Articolo updateArticle(ArticleRequest articleRequest);
-	public Integer cancellaArticoloTramiteId(ArticleRequest articleRequest);
+	public void cancellaArticoloTramiteId(ArticleRequest articleRequest);
 	public List<Articolo> visualizzaTuttiGliArticoli();
+	
 }
