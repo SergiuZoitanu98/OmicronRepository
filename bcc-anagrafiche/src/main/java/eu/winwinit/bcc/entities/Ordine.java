@@ -20,7 +20,7 @@ public class Ordine {
 
 	private List<OrdineArticolo> ordineArticolo;
 
-	@OneToMany(mappedBy = "ordine")
+	
 	public void setOrdineArticolo(List<OrdineArticolo> ordineArticolo) {
 		this.ordineArticolo = ordineArticolo;
 	}
@@ -43,6 +43,7 @@ public class Ordine {
 		this.numeroOrdine = numeroOrdine;
 	}
 	
+	@OneToMany(mappedBy = "ordine")
 	public List<OrdineArticolo> getOrdineArticolo() {
 		return ordineArticolo;
 	}

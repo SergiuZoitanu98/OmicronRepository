@@ -39,7 +39,7 @@ public class Articolo {
 		this.nomeArticolo = nomeArticolo;
 	}
 
-	@OneToMany(mappedBy = "articolo")
+
 	public void setOrdineArticolo(List<OrdineArticolo> ordineArticolo) {
 		this.ordineArticolo = ordineArticolo;
 	}
@@ -50,7 +50,7 @@ public class Articolo {
 	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
 	}
-
+	@OneToMany(mappedBy = "articolo")
 	public List<OrdineArticolo> getOrdineArticolo() {
 		return ordineArticolo;
 	}

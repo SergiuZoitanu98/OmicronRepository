@@ -30,7 +30,7 @@ public class ArticleController {
 		articolo =	articleService.creaArticolo(articoloRequest);
 		dettagli.setIdArticolo(articoloRequest.getArticoloId());
 		dettagli.setQuantita(articoloRequest.getQuantita());
-		return ResponseEntity.status(HttpStatus.OK).body(articolo);
+		return ResponseEntity.status(HttpStatus.OK).body("articolo creato");
 	}
 
 	@RequestMapping(value="/modificaArticolo",method = RequestMethod.PUT)
