@@ -1,5 +1,4 @@
 package eu.winwinit.bcc.controllers;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +19,17 @@ import eu.winwinit.bcc.service.ArticleService;
 @RequestMapping("/api/v1")
 public class ArticleController {
 	
+	//Qui creo le API REST con i metodi creati nel Service di Articolo
+	// Ogni chiamata , se andata a buon fine, mi rispondera' con un messaggio "ok"
+	//tranne nel caso della API "visualizzaArticoli" e la API "eliminaArticolo"  che mi risponderà con la lista di tutti gli articoli e con "articolo cancellato" per la seconda
+	
 	@Autowired
 	private ArticleService articleService;
 
 	@RequestMapping(value="/creaArticolo",method = RequestMethod.POST)
 	public ResponseEntity<?> creaArticolo(@RequestBody ArticleRequest articoloRequest){
 		DettaglioArticoli dettagli = new DettaglioArticoli();
-		Articolo articolo = new Articolo();
+		Articolo articolo;
 		articolo =	articleService.creaArticolo(articoloRequest);
 		dettagli.setIdArticolo(articoloRequest.getArticoloId());
 		dettagli.setQuantita(articoloRequest.getQuantita());

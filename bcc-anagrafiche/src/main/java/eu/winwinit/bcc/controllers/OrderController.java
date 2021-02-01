@@ -14,6 +14,10 @@ import eu.winwinit.bcc.service.OrderService;
 @RequestMapping("/api/v1")
 public class OrderController {
 
+	//Qui creo le API REST con i metodi creati nel servizio dell'ordine
+	//Ogni chiamata , se è andata a buon fine, mi risponde con il messaggio "Ok"
+	//Tranne per la API "view" e la API "eliminaOrdineTramiteId" , che mi risponderà con l'ordine da me cercato e con l articolo ad esso appartenente e con "ordine cancellato" per la seconda
+	
 	@Autowired
 	private OrderService orderService;
 
@@ -32,7 +36,7 @@ public class OrderController {
 	@RequestMapping(value="/eliminaOrdineTramiteId",method = RequestMethod.DELETE)
 	public ResponseEntity<?> eliminaOrdine(@RequestBody OrderRequest orderRequest){
 		orderService.cancellaOrdineTramiteId(orderRequest);
-		return ResponseEntity.status(HttpStatus.OK).body("OK");
+		return ResponseEntity.status(HttpStatus.OK).body("Ordine cancellato");
 	}
 
 	@RequestMapping(value="/view",method = RequestMethod.GET)

@@ -1,5 +1,4 @@
 package eu.winwinit.bcc.entities;
-
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
