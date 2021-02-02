@@ -1,11 +1,16 @@
 package eu.winwinit.bcc.model;
 
+import java.math.BigDecimal;
+
 public class ArticleRequest {
 	
 	private Integer articoloId;
 	private String nomeArticolo;
 	private String descrizione;
 	private Integer quantita;
+	private String colore;
+	private String taglia;
+	private double prezzo;
 	
 	public Integer getArticoloId() {
 		return articoloId;
@@ -37,5 +42,29 @@ public class ArticleRequest {
 	
 	public void setQuantita(Integer quantita) {
 		this.quantita = quantita;
+	}
+
+	public double getPrezzo() {
+		return prezzo;
+	}
+
+	public void setPrezzo(double prezzo) {
+		this.prezzo = prezzo;
+	}
+
+	public String getTaglia() {
+		return taglia;
+	}
+
+	public void setTaglia(String taglia) {
+		this.taglia = taglia;
+	}
+
+	public String getColore() {
+		return colore;
+	}
+
+	public void setColore(String colore) {
+		this.colore = colore;
 	}
 }

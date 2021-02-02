@@ -1,4 +1,5 @@
 package eu.winwinit.bcc.service;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,64 +27,55 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Integer creaOrdine(OrderRequest orderRequest) {
-		//creo un oggetto Ordine
+		//Creo un oggetto ordine
 		Ordine ordine = new Ordine ();
-		//setto il numero dell'ordine,unico campo da settare perchè  l'id  è autoincrementato
+
+		//Setto di nuovo i suoi campi visto che sto facendo una update
+		//Il numero d'ordine deve essere una stringa random univoca (generata con una libreria?)
 		ordine.setNumeroOrdine(orderRequest.getNumeroOrdine());
-		//creo l'ordine
+
+		//salvo le modifiche
 		ordine = orderRepo.save(ordine);
-		
-		// accedo alla lista di tipo DettaglioArticoli per prendere i dettagli dell'articolo
-		//e popolo l'oggetto ordineArticolo con essi, e allo stesso modo prendo i dettagli dell'ordine e
-		//popolo con essi lo stesso oggetto ordineArticolo, cosi da avere i dettagli dell ordine + i dettagli
-		//dell'articolo che ho ordinato
-		for(DettaglioArticoli dettaglio :  orderRequest.getDettagliArticolo()) {
+
+		double totale = 0;
+		//accedo alla lista fornita dalla orderRequest per andare a modificare i dettagli dell'ordine
+		for(DettaglioArticoli dettaglio : orderRequest.getDettagliArticolo()) {
 			OrdineArticolo ordineArticolo = new OrdineArticolo();
-			ordineArticolo.setId(dettaglio.getIdArticolo());
-			ordineArticolo.setId(ordine.getIdOrdine());
-			ordineArticolo.setOrdine(ordine);
-			ordineArticolo.setQuantita(dettaglio.getQuantita());
+			ordineArticolo.setQuantity(dettaglio.getQuantita());
 			ordineArticolo.setArticolo(articleRepo.getOne(dettaglio.getIdArticolo()));
-			
-			//creo l'ordine con i suoi dettagli
+			ordineArticolo.setOrdine(ordine);
 			articleOrderRepo.save(ordineArticolo);
-		}	
-		return ordine.getIdOrdine()	;
+			totale = totale  + (ordineArticolo.getQuantity() * articleRepo.getOne(dettaglio.getIdArticolo()).getPrezzo());
+		}
+		ordine.setTotale(totale);
+		orderRepo.save(ordine);
+		return ordine.getIdOrdine();
 	}
 
 	@Override
 	public Integer modificaOrdine(OrderRequest orderRequest) {
-		//Creo un oggetto ordine
-		Ordine ordine = new Ordine ();
+		Ordine ordine = orderRepo.getOne(orderRequest.getIdOrdine());
 		
-		//Setto di nuovo i suoi campi visto che sto facendo una update
-		ordine.setNumeroOrdine(orderRequest.getNumeroOrdine());
-		ordine.setIdOrdine(orderRequest.getIdOrdine());
-		
-		//salvo le modifiche
-		ordine = orderRepo.save(ordine);
-		
+		double totale = 0;
 		//accedo alla lista fornita dalla orderRequest per andare a modificare i dettagli dell'ordine
 		for(DettaglioArticoli dettaglio : orderRequest.getDettagliArticolo()) {
-			OrdineArticolo ordineArticolo = new OrdineArticolo();
-			ordineArticolo.setId(dettaglio.getIdArticolo());
-			ordineArticolo.setId(ordine.getIdOrdine());
-			ordineArticolo.setQuantita(dettaglio.getQuantita());
-			ordineArticolo.setOrdine(ordine);
-			ordineArticolo.setArticolo(articleRepo.getOne(dettaglio.getIdArticolo()) );
-			
-			//salvo le modifiche
+			OrdineArticolo ordineArticolo = articleOrderRepo.findByArticoloAndOrdine(articleRepo.getOne(dettaglio.getIdArticolo()), ordine);
+			ordineArticolo.setQuantity(dettaglio.getQuantita());
 			articleOrderRepo.save(ordineArticolo);
+			
+			
+			totale = totale  + (ordineArticolo.getQuantity() * articleRepo.getOne(dettaglio.getIdArticolo()).getPrezzo());
 		}
-		return ordine.getIdOrdine()	;
+		ordine.setTotale(totale);
+		orderRepo.save(ordine);
+		return ordine.getIdOrdine();
 	}
 
 	@Override
 	public void cancellaOrdineTramiteId(OrderRequest orderRequest) {
-		
+
 		//cancello prima la foreign key dell'Ordine presente nella tavola di relazione OrdineArticolo
-		articleOrderRepo.deleteById(orderRequest.getIdOrdine());
-		
+
 		// stessa cosa per la foreign Key di Articolo
 		orderRepo.deleteById(orderRequest.getIdOrdine());
 
@@ -96,31 +88,34 @@ public class OrderServiceImpl implements OrderService {
 		//crep un oggetto ordine e gli passo un id 
 		//quindi se gli passo id '1', mi visualizzerà l'ordine con il numero dell'ordine e il suo id
 		Ordine ordine = orderRepo.getOne(idOrdine);
-		
+
 		//creo una lista di tipo OrdineArticolo e la popolo con gli articoli che fanno parte di un determinato ordine
-		List<OrdineArticolo> articoli = articleOrderRepo.findByOrdine(ordine);
-		
+		List<OrdineArticolo> ordini_articoli = articleOrderRepo.findByOrdine(ordine);
+
 		//creo un ArrayList di tipo DettaglioArticoli
 		List<DettaglioArticoli> list = new ArrayList<>();
-		
+
 		//creo un oggetto di tipo DettaglioArticoli
 		DettaglioArticoli dettagli;
-		
+
 		//accedo alla lista articoli
-		for(OrdineArticolo o : articoli) {
+		for(OrdineArticolo o : ordini_articoli) {
 			//popolo l'oggetto di tipo DettaglioArticoli con gli attributi richiesti per poi aggiungerlo alla lista "dettagli", e poi passo la lista 
 			//al metodo "setDettagliArticoli"
 			//una volta chiamato questo metodo con la response,possiamo visualizzare un determinato ordine con i propri articoli e i loro dettagli
-			dettagli = new DettaglioArticoli(o.getArticolo().getArticoloId(),o.getQuantita(),o.getArticolo().getDescrizione());
+			dettagli = new DettaglioArticoli(o.getArticolo().getIdArticolo(), o.getQuantity(),o.getArticolo().getDescrizione());
 			list.add(dettagli);
 		}
-		
+
 		//Visto che l'oggetto OrderRespone è un model e possiede i campi 'idOrdine' 'numeroOrdine' e una lista di 'dettaglioArticoli', setto tutti i campi
 		response.setIdOrdine(ordine.getIdOrdine());
 		response.setNumeroOrdine(ordine.getNumeroOrdine());
 		response.setDettagliArticoli(list);
+		response.setTotale(ordine.getTotale());
 		//una volta popolato l'oggetto OrderResponse, faccio return dello stesso, cosi quando chiamero' questo metodo mi visualizzerà, l'ordine e l'articolo che è associato ad esso
 		return response;		
 	}
+
+	
 
 }

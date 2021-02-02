@@ -1,50 +1,78 @@
 package eu.winwinit.bcc.entities;
-import static javax.persistence.GenerationType.IDENTITY;
 
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
+/**
+ * The persistent class for the ordini database table.
+ * 
+ */
 @Entity
-@Table(name = "ordini")
-public class Ordine {
-	
-	private Integer idOrdine;
+public class Ordine implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id @GeneratedValue
+	private int idOrdine;
+
 	private String numeroOrdine;
 
+	private double totale;
+
+	//bi-directional many-to-one association to OrdiniArticoli
+	@OneToMany(mappedBy="ordine", cascade = CascadeType.REMOVE)
 	private List<OrdineArticolo> ordineArticolo;
 
-	
-	public void setOrdineArticolo(List<OrdineArticolo> ordineArticolo) {
-		this.ordineArticolo = ordineArticolo;
-	}
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-
-	@Column(name = "id_ordine", unique = true, nullable = false)
-	public Integer getIdOrdine() {
-		return idOrdine;
-	}
-	public void setIdOrdine(Integer id) {
-		this.idOrdine = id;
+	public Ordine() {
 	}
 
-	@Column(name = "numero_ordine",nullable = false, length = 255)
+	public int getIdOrdine() {
+		return this.idOrdine;
+	}
+
+	public void setIdOrdine(int idOrdine) {
+		this.idOrdine = idOrdine;
+	}
+
 	public String getNumeroOrdine() {
-		return numeroOrdine;
+		return this.numeroOrdine;
 	}
+
 	public void setNumeroOrdine(String numeroOrdine) {
 		this.numeroOrdine = numeroOrdine;
 	}
-	
-	@OneToMany(mappedBy = "ordine")
-	public List<OrdineArticolo> getOrdineArticolo() {
+
+	public double getTotale() {
+		return this.totale;
+	}
+
+	public void setTotale(double totale) {
+		this.totale = totale;
+	}
+
+	public List<OrdineArticolo> getOrdiniArticoli() {
+		return this.ordineArticolo;
+	}
+
+	public void setOrdiniArticoli(List<OrdineArticolo> ordineArticolo) {
+		this.ordineArticolo = ordineArticolo;
+	}
+
+	public OrdineArticolo addOrdiniArticoli(OrdineArticolo ordineArticolo) {
+		getOrdiniArticoli().add(ordineArticolo);
+		ordineArticolo.setOrdine(this);
+
 		return ordineArticolo;
 	}
-	
+
+	public OrdineArticolo removeOrdiniArticoli(OrdineArticolo ordineArticolo) {
+		getOrdiniArticoli().remove(ordineArticolo);
+		ordineArticolo.setOrdine(null);
+
+		return ordineArticolo;
+	}
+
 }

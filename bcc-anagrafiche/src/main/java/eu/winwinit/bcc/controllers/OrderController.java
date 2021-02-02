@@ -39,7 +39,7 @@ public class OrderController {
 		return ResponseEntity.status(HttpStatus.OK).body("Ordine cancellato");
 	}
 
-	@RequestMapping(value="/view",method = RequestMethod.GET)
+	@RequestMapping(value="/visualizzaOrdineTramiteId",method = RequestMethod.GET)
 	public ResponseEntity<?> view(@RequestBody OrderRequest orderRequest){
 		OrderResponse response = orderService.view(orderRequest.getIdOrdine());
 		return ResponseEntity.status(HttpStatus.OK).body(response);

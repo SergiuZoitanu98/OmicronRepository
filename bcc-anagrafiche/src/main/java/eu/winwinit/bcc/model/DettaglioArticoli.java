@@ -31,4 +31,5 @@ public class DettaglioArticoli {
 		this.descrizione = descrizione;
 	}
 	
+	
 }

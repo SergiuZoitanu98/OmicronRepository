@@ -1,72 +1,66 @@
 package eu.winwinit.bcc.entities;
-import static javax.persistence.GenerationType.IDENTITY;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import java.io.Serializable;
+import javax.persistence.*;
 
+
+/**
+ * The persistent class for the ordini_articoli database table.
+ * 
+ */
 @Entity
-@Table(name = "ordini_articoli")
-public class OrdineArticolo {
+@Table(name="ordini_articoli")
+public class OrdineArticolo implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	private Integer idOrdineArticolo;
-	private Integer quantita;
-	private String descrizione;
+	@Id @GeneratedValue
+	private int idOrdineProdotti;
 
-	private Articolo articolo;
+	private int quantity;
+	
+	//bi-directional many-to-one association to Ordini
+	@ManyToOne
+	@JoinColumn(name="idOrdineFk")
 	private Ordine ordine;
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-
-	@Column(name = "id_ordine_articolo", unique = true, nullable = false)
-	public Integer getId() {
-		return idOrdineArticolo;
-	}
-
-	public void setId(Integer id) {
-		this.idOrdineArticolo = id;
-	}
-
+	//bi-directional many-to-one association to Articoli
 	@ManyToOne
-	@JoinColumn(name = "id_articolo")
+	@JoinColumn(name="idArticoloFk")
+	private Articolo articolo;
+
+	public OrdineArticolo() {
+	}
+
+	public int getIdOrdineProdotti() {
+		return this.idOrdineProdotti;
+	}
+
+	public void setIdOrdineProdotti(int idOrdineProdotti) {
+		this.idOrdineProdotti = idOrdineProdotti;
+	}
+
+	public Ordine getOrdine() {
+		return this.ordine;
+	}
+
+	public void setOrdine(Ordine ordine) {
+		this.ordine = ordine;
+	}
+
 	public Articolo getArticolo() {
-		return articolo;
+		return this.articolo;
 	}
 
 	public void setArticolo(Articolo articolo) {
 		this.articolo = articolo;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "id_ordine")
-	public Ordine getOrdine() {
-		return ordine;
+	public int getQuantity() {
+		return quantity;
 	}
 
-
-	public void setOrdine(Ordine ordine) {
-		this.ordine = ordine;
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
-	public Integer getQuantita() {
-		return quantita;
-	}
-
-	public void setQuantita(Integer quantita) {
-		this.quantita = quantita;
-	}
-
-	@Column(name = "descrizione_articolo",length = 255)
-	public String getDescrizione() {
-		return descrizione;
-	}
-
-	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
-	}
 }

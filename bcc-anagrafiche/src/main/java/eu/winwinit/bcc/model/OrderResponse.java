@@ -6,7 +6,8 @@ public class OrderResponse {
 
 	private Integer idOrdine;
 	private String numeroOrdine;
-
+	private double totale;
+	
 	private List<DettaglioArticoli> dettagliArticoli;
 
 	public List<DettaglioArticoli> getDettagliArticoli() {
@@ -31,5 +32,13 @@ public class OrderResponse {
 
 	public void setNumeroOrdine(String numeroOrdine) {
 		this.numeroOrdine = numeroOrdine;
+	}
+
+	public double getTotale() {
+		return totale;
+	}
+
+	public void setTotale(double totale) {
+		this.totale = totale;
 	}
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import eu.winwinit.bcc.entities.Articolo;
 import eu.winwinit.bcc.model.ArticleRequest;
+import eu.winwinit.bcc.model.DettaglioArticoli;
 import eu.winwinit.bcc.repository.ArticleRepository;
 
 @Service("articleService")
@@ -19,10 +20,11 @@ public class ArticleServiceImpl implements ArticleService{
 		Articolo articolo = new Articolo();
 		
 		//Uso i setter per popolare l'oggetto
-		articolo.setNomeArticolo(articleRequest.getNomeArticolo());
+		articolo.setNome(articleRequest.getNomeArticolo());
 		articolo.setDescrizione(articleRequest.getDescrizione());
-		
-		//salvo , quindi creo l'articolo
+		articolo.setColore(articleRequest.getColore());
+		articolo.setPrezzo(articleRequest.getPrezzo());
+		articolo.setTaglia(articleRequest.getTaglia());
 		return articleRepo.save(articolo);
 	}
 
@@ -32,9 +34,9 @@ public class ArticleServiceImpl implements ArticleService{
 		Articolo articolo = new Articolo();
 		
 		//setto di nuovo tutti i campi con i setter perchè sto facendo una update
-		articolo.setNomeArticolo(articleRequest.getNomeArticolo());
+		articolo.setNome(articleRequest.getNomeArticolo());
 		articolo.setDescrizione(articleRequest.getDescrizione());
-		articolo.setArticoloId(articleRequest.getArticoloId());
+		articolo.setIdArticolo(articleRequest.getArticoloId());
 		
 		//Salvo le modifiche 
 		articleRepo.save(articolo);

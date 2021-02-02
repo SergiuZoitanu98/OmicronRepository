@@ -1,56 +1,107 @@
 package eu.winwinit.bcc.entities;
-import static javax.persistence.GenerationType.IDENTITY;
 
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
+
+/**
+ * The persistent class for the articoli database table.
+ * 
+ */
 @Entity
-@Table(name = "articoli")
-public class Articolo {
-	
-	private Integer articoloId;
-	private String nomeArticolo;
+public class Articolo implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id @GeneratedValue
+	private int idArticolo;
+
+	private String colore;
+
 	private String descrizione;
-	
+
+	private String nome;
+
+	private double prezzo;
+
+	private String taglia;
+
+	//bi-directional many-to-one association to OrdiniArticoli
+	@OneToMany(mappedBy="articolo")
 	private List<OrdineArticolo> ordineArticolo;
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-
-	@Column(name = "id_articolo", unique = true, nullable = false)
-	public Integer getArticoloId() {
-		return articoloId;
+	public Articolo() {
 	}
 
-	public void setArticoloId(Integer articoloId) {
-		this.articoloId = articoloId;
-	}
-	@Column(name = "nome_articolo",length = 255)
-	public String getNomeArticolo() {
-		return nomeArticolo;
-	}
-	public void setNomeArticolo(String nomeArticolo) {
-		this.nomeArticolo = nomeArticolo;
+	public int getIdArticolo() {
+		return this.idArticolo;
 	}
 
-
-	public void setOrdineArticolo(List<OrdineArticolo> ordineArticolo) {
-		this.ordineArticolo = ordineArticolo;
+	public void setIdArticolo(int idArticolo) {
+		this.idArticolo = idArticolo;
 	}
-	@Column(name="descrizione_articolo",length = 255)
+
+	public String getColore() {
+		return this.colore;
+	}
+
+	public void setColore(String colore) {
+		this.colore = colore;
+	}
+
 	public String getDescrizione() {
-		return descrizione;
+		return this.descrizione;
 	}
+
 	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
 	}
-	@OneToMany(mappedBy = "articolo")
-	public List<OrdineArticolo> getOrdineArticolo() {
+
+	public String getNome() {
+		return this.nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public double getPrezzo() {
+		return this.prezzo;
+	}
+
+	public void setPrezzo(double prezzo) {
+		this.prezzo = prezzo;
+	}
+
+	public String getTaglia() {
+		return this.taglia;
+	}
+
+	public void setTaglia(String taglia) {
+		this.taglia = taglia;
+	}
+
+	public List<OrdineArticolo> getOrdiniArticoli() {
+		return this.ordineArticolo;
+	}
+
+	public void setOrdiniArticoli(List<OrdineArticolo> ordineArticolo) {
+		this.ordineArticolo = ordineArticolo;
+	}
+
+	public OrdineArticolo addOrdiniArticoli(OrdineArticolo ordineArticolo) {
+		getOrdiniArticoli().add(ordineArticolo);
+		ordineArticolo.setArticolo(this);
+
+		return ordineArticolo;
+	}
+
+	public OrdineArticolo removeOrdiniArticoli(OrdineArticolo ordineArticolo) {
+		getOrdiniArticoli().remove(ordineArticolo);
+		ordineArticolo.setArticolo(null);
+
 		return ordineArticolo;
 	}
 

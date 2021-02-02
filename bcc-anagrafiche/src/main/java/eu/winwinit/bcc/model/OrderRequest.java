@@ -6,7 +6,7 @@ public class OrderRequest {
 	
 	private Integer idOrdine;
 	private String numeroOrdine;
-	
+	private double totale;
 	private List<DettaglioArticoli> dettagliArticolo;
 	
 	public Integer getIdOrdine() {
@@ -31,5 +31,13 @@ public class OrderRequest {
 	
 	public void setDettagliArticolo(List<DettaglioArticoli> dettagliArticolo) {
 		this.dettagliArticolo = dettagliArticolo;
+	}
+
+	public double getTotale() {
+		return totale;
+	}
+
+	public void setTotale(double totale) {
+		this.totale = totale;
 	}
 }

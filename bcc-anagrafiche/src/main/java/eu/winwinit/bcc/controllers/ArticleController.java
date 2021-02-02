@@ -28,12 +28,8 @@ public class ArticleController {
 
 	@RequestMapping(value="/creaArticolo",method = RequestMethod.POST)
 	public ResponseEntity<?> creaArticolo(@RequestBody ArticleRequest articoloRequest){
-		DettaglioArticoli dettagli = new DettaglioArticoli();
-		Articolo articolo;
-		articolo =	articleService.creaArticolo(articoloRequest);
-		dettagli.setIdArticolo(articoloRequest.getArticoloId());
-		dettagli.setQuantita(articoloRequest.getQuantita());
-		return ResponseEntity.status(HttpStatus.OK).body("articolo creato");
+		Articolo articolo =	articleService.creaArticolo(articoloRequest);
+		return ResponseEntity.status(HttpStatus.OK).body("articolo creato con id:"+" "+articolo.getIdArticolo());
 	}
 
 	@RequestMapping(value="/modificaArticolo",method = RequestMethod.PUT)
