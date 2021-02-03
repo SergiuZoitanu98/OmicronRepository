@@ -55,15 +55,15 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Integer modificaOrdine(OrderRequest orderRequest) {
 		Ordine ordine = orderRepo.getOne(orderRequest.getIdOrdine());
-		
+
 		double totale = 0;
 		//accedo alla lista fornita dalla orderRequest per andare a modificare i dettagli dell'ordine
 		for(DettaglioArticoli dettaglio : orderRequest.getDettagliArticolo()) {
 			OrdineArticolo ordineArticolo = articleOrderRepo.findByArticoloAndOrdine(articleRepo.getOne(dettaglio.getIdArticolo()), ordine);
 			ordineArticolo.setQuantity(dettaglio.getQuantita());
 			articleOrderRepo.save(ordineArticolo);
-			
-			
+
+
 			totale = totale  + (ordineArticolo.getQuantity() * articleRepo.getOne(dettaglio.getIdArticolo()).getPrezzo());
 		}
 		ordine.setTotale(totale);
@@ -116,6 +116,8 @@ public class OrderServiceImpl implements OrderService {
 		return response;		
 	}
 
-	
+
+
+
 
 }

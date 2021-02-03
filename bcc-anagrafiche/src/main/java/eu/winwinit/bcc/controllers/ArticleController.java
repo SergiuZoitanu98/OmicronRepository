@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
 import eu.winwinit.bcc.entities.Articolo;
 import eu.winwinit.bcc.model.ArticleRequest;
+import eu.winwinit.bcc.model.ArticleResponse;
 import eu.winwinit.bcc.model.DettaglioArticoli;
 import eu.winwinit.bcc.service.ArticleService;
 
@@ -46,8 +48,8 @@ public class ArticleController {
 
 	@RequestMapping(value="visualizzaArticoli",method = RequestMethod.GET)
 	public ResponseEntity<?> visualizzaTuttiGliArticoli(){
-		List<Articolo> articoli = articleService.visualizzaTuttiGliArticoli();
-		return ResponseEntity.status(HttpStatus.OK).body(articoli);
+		List<ArticleResponse> response = articleService.visualizzaTuttiGliArticoli();
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 
 	}
 }
