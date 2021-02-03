@@ -17,7 +17,7 @@ public class OrdineArticolo implements Serializable {
 	private int idOrdineProdotti;
 
 	private int quantity;
-	
+
 	//bi-directional many-to-one association to Ordini
 	@ManyToOne
 	@JoinColumn(name="idOrdineFk")
@@ -62,5 +62,4 @@ public class OrdineArticolo implements Serializable {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-
 }

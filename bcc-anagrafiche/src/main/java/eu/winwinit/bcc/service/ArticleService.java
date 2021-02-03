@@ -6,11 +6,9 @@ import eu.winwinit.bcc.model.ArticleRequest;
 import eu.winwinit.bcc.model.ArticleResponse;
 
 public interface ArticleService {
-	
-//Creo i metodi dell'interfaccia ArticleService che saranno implementati dalla classe ArticleServiceImpl
+
 	public Articolo creaArticolo(ArticleRequest articleRequest);
 	public Articolo updateArticle(ArticleRequest articleRequest);
 	public void cancellaArticoloTramiteId(ArticleRequest articleRequest);
 	public List<ArticleResponse> visualizzaTuttiGliArticoli();
-	
 }

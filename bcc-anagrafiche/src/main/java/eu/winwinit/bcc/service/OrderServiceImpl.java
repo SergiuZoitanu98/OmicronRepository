@@ -1,7 +1,9 @@
 package eu.winwinit.bcc.service;
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import eu.winwinit.bcc.entities.Ordine;
@@ -27,24 +29,23 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Integer creaOrdine(OrderRequest orderRequest) {
-		//Creo un oggetto ordine
+
 		Ordine ordine = new Ordine ();
-
-		//Setto di nuovo i suoi campi visto che sto facendo una update
-		//Il numero d'ordine deve essere una stringa random univoca (generata con una libreria?)
-		ordine.setNumeroOrdine(orderRequest.getNumeroOrdine());
-
-		//salvo le modifiche
+		//popolo il nuovo oggetto Ordine con i dati che mi arrivanao dal FE,ovvero da orderRequest
+		ordine.setNumeroOrdine(generateNumeroOrdine());
+		//salvo l'ordine appena creato
 		ordine = orderRepo.save(ordine);
-
-		double totale = 0;
-		//accedo alla lista fornita dalla orderRequest per andare a modificare i dettagli dell'ordine
+		//creo una variabile di supporto per calcolare il totale del prezzo dell' ordine in base a quanti articoli sono presenti
+		Double totale = 0.0;
 		for(DettaglioArticoli dettaglio : orderRequest.getDettagliArticolo()) {
 			OrdineArticolo ordineArticolo = new OrdineArticolo();
+			//popolo l'oggetto ordineArticolo con i dati che mi arrivano dal FE, in questo caso una lista di dettagliArticolo
 			ordineArticolo.setQuantity(dettaglio.getQuantita());
 			ordineArticolo.setArticolo(articleRepo.getOne(dettaglio.getIdArticolo()));
 			ordineArticolo.setOrdine(ordine);
+			//salvo i dettagli dell'articolo presente nell'ordine
 			articleOrderRepo.save(ordineArticolo);
+			//calcolo il  prezzo totale dell'ordine
 			totale = totale  + (ordineArticolo.getQuantity() * articleRepo.getOne(dettaglio.getIdArticolo()).getPrezzo());
 		}
 		ordine.setTotale(totale);
@@ -54,16 +55,19 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Integer modificaOrdine(OrderRequest orderRequest) {
+		//prendo tramite id un ordine esistente nel database
 		Ordine ordine = orderRepo.getOne(orderRequest.getIdOrdine());
-
+		//dichiaro sempre una variabile di supporto per calcolare il prezzo totale
 		double totale = 0;
-		//accedo alla lista fornita dalla orderRequest per andare a modificare i dettagli dell'ordine
 		for(DettaglioArticoli dettaglio : orderRequest.getDettagliArticolo()) {
+			//cerco tramite foreign key di articolo e ordine, l'ordine_articolo da modificare
 			OrdineArticolo ordineArticolo = articleOrderRepo.findByArticoloAndOrdine(articleRepo.getOne(dettaglio.getIdArticolo()), ordine);
+			//modifico la quantità di quel ordine_articolo
 			ordineArticolo.setQuantity(dettaglio.getQuantita());
+			
+			//salvo l'ordine_articolo
 			articleOrderRepo.save(ordineArticolo);
-
-
+			//ricalcolo il prezzo totale , se la quantità è cambiata, il prezzo totale cambia, al contrario, rimane invariato
 			totale = totale  + (ordineArticolo.getQuantity() * articleRepo.getOne(dettaglio.getIdArticolo()).getPrezzo());
 		}
 		ordine.setTotale(totale);
@@ -73,51 +77,45 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public void cancellaOrdineTramiteId(OrderRequest orderRequest) {
-
-		//cancello prima la foreign key dell'Ordine presente nella tavola di relazione OrdineArticolo
-
-		// stessa cosa per la foreign Key di Articolo
+		//elimino l'ordine tramite id
+		//in automatico elimina tutti i campi presente nella tabella ordine_articolo con quell'id
+		//questo perchè le entity ordine e articolo hanno " cascade = CascadeType.REMOVE"
 		orderRepo.deleteById(orderRequest.getIdOrdine());
-
 	}
 
 	@Override
 	public OrderResponse view(Integer idOrdine) {
-		//creo un oggetto OrderResponse
+
 		OrderResponse response = new OrderResponse();
-		//crep un oggetto ordine e gli passo un id 
-		//quindi se gli passo id '1', mi visualizzerà l'ordine con il numero dell'ordine e il suo id
+		//prendo un ordine tramite id esistente nel database
 		Ordine ordine = orderRepo.getOne(idOrdine);
-
-		//creo una lista di tipo OrdineArticolo e la popolo con gli articoli che fanno parte di un determinato ordine
+		//prendo una lista di ordini_articoli presenti nel database,ricercando per ordine
 		List<OrdineArticolo> ordini_articoli = articleOrderRepo.findByOrdine(ordine);
-
-		//creo un ArrayList di tipo DettaglioArticoli
+		//creo una nuova lista di DettaglioArticoli
 		List<DettaglioArticoli> list = new ArrayList<>();
-
-		//creo un oggetto di tipo DettaglioArticoli
+		//creo un oggetto di DettaglioArticoli
 		DettaglioArticoli dettagli;
-
-		//accedo alla lista articoli
 		for(OrdineArticolo o : ordini_articoli) {
-			//popolo l'oggetto di tipo DettaglioArticoli con gli attributi richiesti per poi aggiungerlo alla lista "dettagli", e poi passo la lista 
-			//al metodo "setDettagliArticoli"
-			//una volta chiamato questo metodo con la response,possiamo visualizzare un determinato ordine con i propri articoli e i loro dettagli
+			//accedo alla lista di ordini_articoli, e popolo l oggetto DettaglioArticoli
 			dettagli = new DettaglioArticoli(o.getArticolo().getIdArticolo(), o.getQuantity(),o.getArticolo().getDescrizione());
+			//aggiungo l'oggetto alla lista
 			list.add(dettagli);
 		}
-
-		//Visto che l'oggetto OrderRespone è un model e possiede i campi 'idOrdine' 'numeroOrdine' e una lista di 'dettaglioArticoli', setto tutti i campi
+		//popolo l'oggetto response
 		response.setIdOrdine(ordine.getIdOrdine());
 		response.setNumeroOrdine(ordine.getNumeroOrdine());
 		response.setDettagliArticoli(list);
 		response.setTotale(ordine.getTotale());
-		//una volta popolato l'oggetto OrderResponse, faccio return dello stesso, cosi quando chiamero' questo metodo mi visualizzerà, l'ordine e l'articolo che è associato ad esso
 		return response;		
 	}
+	
+	//creo un metodo per autogenerarmi il numero dell' ordine
+	public String generateNumeroOrdine() {
+		int length = 10;
+	    boolean useLetters = true;
+	    boolean useNumbers = false;
+	    String generatedString = RandomStringUtils.random(length, useLetters, useNumbers);
 
-
-
-
-
+	  return  generatedString;
+	}
 }

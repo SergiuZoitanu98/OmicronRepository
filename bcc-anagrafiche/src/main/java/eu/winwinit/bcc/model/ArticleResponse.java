@@ -1,12 +1,14 @@
 package eu.winwinit.bcc.model;
 
 public class ArticleResponse {
+	
 	private Integer articoloId;
 	private String nomeArticolo;
 	private String descrizione;
 	private String colore;
 	private String taglia;
 	private double prezzo;
+	
 	public Integer getArticoloId() {
 		return articoloId;
 	}
