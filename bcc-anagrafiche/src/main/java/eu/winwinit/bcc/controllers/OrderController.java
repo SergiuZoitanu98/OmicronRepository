@@ -35,13 +35,16 @@ public class OrderController {
 	public ResponseEntity<?> creaOrdine(@RequestBody OrderRequest orderRequest){
 		List<DettaglioArticoli> dettagli = orderRequest.getDettagliArticolo();
 		for(DettaglioArticoli dettaglio : dettagli) {
-			if(articleRepo.existsById(dettaglio.getIdArticolo())) {
-				orderService.creaOrdine(orderRequest);
-				return  ResponseEntity.status(HttpStatus.OK).body("ordine creato");
+			if(dettaglio.getIdArticolo() == null) {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("l'id dell articolo non puo'essere null");
+			}
+			if(!articleRepo.existsById(dettaglio.getIdArticolo())) {
+				return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("non esiste un articolo con questo id");
 			}
 		}
 
-		return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("non esiste un articolo con questo id");
+		orderService.creaOrdine(orderRequest);
+		return  ResponseEntity.status(HttpStatus.OK).body("ordine creato");
 	}
 
 	@RequestMapping(value="/modificaOrdine",method = RequestMethod.PUT)
