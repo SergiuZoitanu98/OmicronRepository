@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import eu.winwinit.bcc.entities.Articolo;
 import eu.winwinit.bcc.model.ArticleRequest;
 import eu.winwinit.bcc.model.ArticleResponse;
+import eu.winwinit.bcc.repository.ArticleOrderRepository;
 import eu.winwinit.bcc.repository.ArticleRepository;
 import eu.winwinit.bcc.service.ArticleService;
 
@@ -23,7 +24,10 @@ public class ArticleController {
 	private ArticleService articleService;
 
 	@Autowired
-	ArticleRepository articleRepo;
+	private ArticleRepository articleRepo;
+
+	@Autowired
+	private ArticleOrderRepository articleOrderRepo;
 
 	@RequestMapping(value="/creaArticolo",method = RequestMethod.POST)
 	public ResponseEntity<?> creaArticolo(@RequestBody ArticleRequest articoloRequest){
@@ -34,9 +38,13 @@ public class ArticleController {
 		return ResponseEntity.status(HttpStatus.OK).body("articolo creato con id:"+" "+articolo.getIdArticolo());
 	}
 
-
 	@RequestMapping(value="/modificaArticolo",method = RequestMethod.PUT)
 	public ResponseEntity<?> modificaArticolo(@RequestBody ArticleRequest articoloRequest){
+
+		if(articoloRequest.getPrezzo() == 0) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("il prezzo deve essere compreso tra 0.1 e 999+");
+		}
+
 		if(articoloRequest.getArticoloId() == null ) {
 			return	ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("l'id non deve essere null");
 		}
@@ -45,12 +53,15 @@ public class ArticleController {
 			return ResponseEntity.status(HttpStatus.OK).body("articolo modificato");
 		}
 		return	ResponseEntity.status(HttpStatus.NOT_FOUND).body("non esiste un articolo con quell'id ");
-
 	}
-
 
 	@RequestMapping(value="/eliminaArticolo",method = RequestMethod.DELETE)
 	public ResponseEntity<?> eliminaArticoloTramiteId(@RequestBody ArticleRequest articoloRequest){
+
+		if(articleOrderRepo.existsById(articoloRequest.getArticoloId())) {
+			return	ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("l'articolo che stai cercando di eliminare è presente in un ordine ");
+
+		}
 
 		if(articoloRequest.getArticoloId() == null ) {
 			return	ResponseEntity.status(HttpStatus.NOT_FOUND).body("l'id non deve essere null ");
@@ -60,7 +71,6 @@ public class ArticleController {
 			return ResponseEntity.status(HttpStatus.OK).body("articolo eliminato");
 		}
 		return	ResponseEntity.status(HttpStatus.NOT_FOUND).body("non esiste un articolo con quell'id ");
-
 	}
 
 	@RequestMapping(value="visualizzaArticoli",method = RequestMethod.GET)
